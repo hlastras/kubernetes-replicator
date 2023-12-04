@@ -156,6 +156,9 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 
 	generateOwnerReference, ok := source.Annotations[common.GenerateOwnerReferences]
 	if ok && generateOwnerReference == "true" {
+		fmt.Println(">>>>>BuildOwnerReferences")
+		fmt.Println("APIVersion: ", source.APIVersion)
+		fmt.Println("Kind: ", source.Kind)
 		resourceCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, &source.TypeMeta)
 	}
 

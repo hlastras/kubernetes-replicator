@@ -1,6 +1,7 @@
 package common
 
 import (
+	"fmt"
 	"strings"
 
 	v1 "k8s.io/api/core/v1"
@@ -45,6 +46,12 @@ func JSONPatchPathEscape(annotation string) string {
 }
 
 func BuildOwnerReferences(objectMeta *metav1.ObjectMeta, typeMeta *metav1.TypeMeta) []metav1.OwnerReference {
+	fmt.Println(">>>>>222BuildOwnerReferences")
+	fmt.Println("APIVersion: ", typeMeta.APIVersion)
+	fmt.Println("Kind: ", typeMeta.Kind)
+	fmt.Println("Name: ", objectMeta.Name)
+	fmt.Println("UID: ", objectMeta.UID)
+
 	blockOwnerDeletion := false
 	isController := false
 	return []metav1.OwnerReference{
