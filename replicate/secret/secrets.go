@@ -13,6 +13,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/types"
 
+	run "runtime"
+
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -161,7 +163,7 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 		fmt.Println("Kind: ", source.Kind)
 
 		buf := make([]byte, 1024)
-		n := runtime.Stack(buf, false)
+		n := run.Stack(buf, false)
 		fmt.Println(string(buf[:n]))
 
 		resourceCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, &source.TypeMeta)
