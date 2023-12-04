@@ -154,6 +154,11 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 		resourceCopy.OwnerReferences = source.OwnerReferences
 	}
 
+	generateOwnerReference, ok := source.Annotations[common.GenerateOwnerReferences]
+	if ok && generateOwnerReference == "true" {
+		resourceCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, &source.TypeMeta)
+	}
+
 	if resourceCopy.Data == nil {
 		resourceCopy.Data = make(map[string][]byte)
 	}

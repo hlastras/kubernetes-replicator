@@ -127,6 +127,11 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 		targetCopy.OwnerReferences = source.OwnerReferences
 	}
 
+	generateOwnerReference, ok := source.Annotations[common.GenerateOwnerReferences]
+	if ok && generateOwnerReference == "true" {
+		targetCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, &source.TypeMeta)
+	}
+
 	if targetCopy.Rules == nil {
 		targetCopy.Rules = make([]rbacv1.PolicyRule, 0)
 	}

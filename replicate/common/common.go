@@ -1,9 +1,10 @@
 package common
 
 import (
+	"strings"
+
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"strings"
 )
 
 type Replicator interface {
@@ -41,4 +42,19 @@ func BuildStrictRegex(regex string) string {
 
 func JSONPatchPathEscape(annotation string) string {
 	return strings.ReplaceAll(annotation, "/", "~1")
+}
+
+func BuildOwnerReferences(objectMeta *metav1.ObjectMeta, typeMeta *metav1.TypeMeta) []metav1.OwnerReference {
+	blockOwnerDeletion := false
+	isController := false
+	return []metav1.OwnerReference{
+		{
+			APIVersion:         typeMeta.APIVersion,
+			Kind:               typeMeta.Kind,
+			BlockOwnerDeletion: &blockOwnerDeletion,
+			Controller:         &isController,
+			Name:               objectMeta.Name,
+			UID:                objectMeta.UID,
+		},
+	}
 }
