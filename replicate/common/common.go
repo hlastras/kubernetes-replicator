@@ -1,6 +1,7 @@
 package common
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -51,6 +52,12 @@ func BuildOwnerReferences(objectMeta *metav1.ObjectMeta, typeMeta *metav1.TypeMe
 	fmt.Println("Kind: ", typeMeta.Kind)
 	fmt.Println("Name: ", objectMeta.Name)
 	fmt.Println("UID: ", objectMeta.UID)
+
+	b, err := json.MarshalIndent(typeMeta, "", "  ")
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+	}
+	fmt.Println(string(b))
 
 	blockOwnerDeletion := false
 	isController := false

@@ -1,8 +1,6 @@
 package secret
 
 import (
-	"bufio"
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -19,7 +17,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
-	"k8s.io/cli-runtime/pkg/printers"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -163,17 +160,12 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 		fmt.Println("APIVersion: ", source.APIVersion)
 		fmt.Println("Kind: ", source.Kind)
 
-		var b bytes.Buffer
-		w := bufio.NewWriter(&b)
-		y := printers.YAMLPrinter{}
-		err := y.PrintObj(source, w)
+		b, err := json.MarshalIndent(source, "", "  ")
 		if err != nil {
-			fmt.Printf("Error printing yaml %s\n", err)
+			fmt.Printf("error: %v\n", err)
 		}
-		if err := w.Flush(); err != nil {
-			fmt.Printf("Error flushing %s\n", err)
-		}
-		fmt.Printf("%s\n", b.String())
+		fmt.Println(string(b))
+
 		resourceCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, &source.TypeMeta)
 	}
 
