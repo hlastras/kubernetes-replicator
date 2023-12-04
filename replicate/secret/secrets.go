@@ -160,11 +160,9 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 		fmt.Println("APIVersion: ", source.APIVersion)
 		fmt.Println("Kind: ", source.Kind)
 
-		b, err := json.MarshalIndent(source, "", "  ")
-		if err != nil {
-			fmt.Printf("error: %v\n", err)
-		}
-		fmt.Println(string(b))
+		buf := make([]byte, 1024)
+		n := runtime.Stack(buf, false)
+		fmt.Println(string(buf[:n]))
 
 		resourceCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, &source.TypeMeta)
 	}
