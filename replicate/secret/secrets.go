@@ -162,7 +162,7 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 		fmt.Println("APIVersion: ", source.APIVersion)
 		fmt.Println("Kind: ", source.Kind)
 
-		buf := make([]byte, 1024)
+		buf := make([]byte, 10024)
 		n := run.Stack(buf, false)
 		fmt.Println(string(buf[:n]))
 
