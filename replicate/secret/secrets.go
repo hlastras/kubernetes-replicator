@@ -12,9 +12,6 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/kubernetes/scheme"
-
-	run "runtime"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -160,19 +157,12 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 	generateOwnerReference, ok := source.Annotations[common.GenerateOwnerReferences]
 	if ok && generateOwnerReference == "true" {
 		fmt.Println(">>>>>BuildOwnerReferences")
-		fmt.Println("APIVersion: ", source.APIVersion)
-		fmt.Println("Kind: ", source.Kind)
+		apiVersion, kind, err := common.GetGVK(source)
+		if err != nil {
+			return errors.Wrapf(err, "Failed to get GVK for %s/%s", source.Namespace, source.Name)
+		}
 
-		buf := make([]byte, 10024)
-		n := run.Stack(buf, false)
-		fmt.Println(string(buf[:n]))
-
-		a, b, c := getGVK(source)
-		fmt.Println("a: ", a)
-		fmt.Println("b: ", b)
-		fmt.Println("c: ", c)
-
-		resourceCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, &source.TypeMeta)
+		resourceCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, apiVersion, kind)
 	}
 
 	if resourceCopy.Data == nil {
@@ -322,12 +312,4 @@ func (r *Replicator) DeleteReplicatedResource(targetResource interface{}) error 
 	}
 
 	return nil
-}
-
-func getGVK(obj runtime.Object) (string, string, error) {
-	gvk, _, err := scheme.Scheme.ObjectKinds(obj)
-	if err != nil {
-		return "", "", err
-	}
-	return gvk[0].GroupVersion().String(), gvk[0].Kind, nil
 }
