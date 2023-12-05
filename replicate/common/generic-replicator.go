@@ -3,12 +3,15 @@ package common
 import (
 	"context"
 	"fmt"
-	"k8s.io/apimachinery/pkg/labels"
 	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"k8s.io/apimachinery/pkg/labels"
+
+	run "runtime"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
@@ -454,6 +457,12 @@ func (r *GenericReplicator) ResourceDeleted(source interface{}) {
 	sourceKey := MustGetKey(source)
 	logger := log.WithField("kind", r.Kind).WithField("source", sourceKey)
 	logger.Debugf("Deleting %s %s", r.Kind, sourceKey)
+
+	if strings.Contains(sourceKey, "source-pushed-to-other-generating-owner-references") {
+		buf := make([]byte, 10024)
+		n := run.Stack(buf, false)
+		fmt.Println(string(buf[:n]))
+	}
 
 	r.ResourceDeletedReplicateTo(source)
 	r.ResourceDeletedReplicateFrom(source)
