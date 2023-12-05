@@ -129,7 +129,11 @@ func (r *Replicator) ReplicateObjectTo(sourceObj interface{}, target *v1.Namespa
 
 	generateOwnerReference, ok := source.Annotations[common.GenerateOwnerReferences]
 	if ok && generateOwnerReference == "true" {
-		targetCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, &source.TypeMeta)
+		apiVersion, kind, err := common.GetGVK(source)
+		if err != nil {
+			return errors.Wrapf(err, "Failed to get GVK for %s/%s", source.Namespace, source.Name)
+		}
+		targetCopy.OwnerReferences = common.BuildOwnerReferences(&source.ObjectMeta, apiVersion, kind)
 	}
 
 	if targetCopy.Rules == nil {
