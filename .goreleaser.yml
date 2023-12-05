@@ -49,10 +49,10 @@ docker_manifests:
   - 
     name_template: quay.io/hectorarranz/kubernetes-replicator:latest
     image_templates:
-    - quay.io/mittwald/kubernetes-replicator-amd64:{{ .Tag }}
-    - quay.io/mittwald/kubernetes-replicator-arm64:{{ .Tag }}
+    - quay.io/hectorarranz/kubernetes-replicator-amd64:{{ .Tag }}
+    - quay.io/hectorarranz/kubernetes-replicator-arm64:{{ .Tag }}
   -
     name_template: quay.io/mittwald/kubernetes-replicator:{{ .Tag }}
     image_templates:
-    - quay.io/mittwald/kubernetes-replicator-amd64:{{ .Tag }}
-    - quay.io/mittwald/kubernetes-replicator-arm64:{{ .Tag }}
+    - quay.io/hectorarranz/kubernetes-replicator-amd64:{{ .Tag }}
+    - quay.io/hectorarranz/kubernetes-replicator-arm64:{{ .Tag }}
