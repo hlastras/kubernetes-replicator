@@ -52,7 +52,7 @@ docker_manifests:
     - quay.io/hectorarranz/kubernetes-replicator-amd64:{{ .Tag }}
     - quay.io/hectorarranz/kubernetes-replicator-arm64:{{ .Tag }}
   -
-    name_template: quay.io/mittwald/kubernetes-replicator:{{ .Tag }}
+    name_template: quay.io/hectorarranz/kubernetes-replicator:{{ .Tag }}
     image_templates:
     - quay.io/hectorarranz/kubernetes-replicator-amd64:{{ .Tag }}
     - quay.io/hectorarranz/kubernetes-replicator-arm64:{{ .Tag }}
