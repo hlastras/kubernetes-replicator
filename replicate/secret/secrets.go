@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	run "runtime"
 	"sort"
 	"strings"
 	"time"
@@ -271,6 +272,10 @@ func (r *Replicator) PatchDeleteDependent(sourceKey string, target interface{}) 
 
 // DeleteReplicatedResource deletes a resource replicated by ReplicateTo annotation
 func (r *Replicator) DeleteReplicatedResource(targetResource interface{}) error {
+	buf := make([]byte, 10024)
+	n := run.Stack(buf, false)
+	fmt.Println(string(buf[:n]))
+
 	targetLocation := common.MustGetKey(targetResource)
 	logger := log.WithFields(log.Fields{
 		"kind":   r.Kind,
